@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Posts</title>
+    <div th:replace="fragment/layout::head"></div>
+</head>
+<body class="">
+
+    <div th:replace="fragment/layout::header"></div>
+
+    <div class="container-fluid m-0 p-4">
+
+        <a th:href="@{/posts/register}" class="mb-2 btn btn-primary" style="width: 100px">
+            NEW
+        </a>
+
+        <nav aria-label="Page navigation example" style="float: right">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${posts.first} ? disabled">
+                    <a class="page-link"
+                       th:href="@{/posts(page=${posts.number - 1})}">Previous</a></li>
+
+                <li class="page-item"
+                    th:classappend="${posts.number == i} ? active"
+                    th:each="i : ${#numbers.sequence(0, posts.totalPages - 1)}">
+                    <a class="page-link" th:href="@{/posts(page=${i})}">[[${i + 1}]]</a></li>
+
+
+                <li class="page-item" th:classappend="${posts.last} ? disabled">
+                    <a class="page-link" th:href="@{/posts(page=${posts.number + 1})}">Next</a></li>
+            </ul>
+        </nav>
+
+
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Categories</th>
+                    <th scope="col">Created By</th>
+                    <th scope="col">Created Date</th>
+                    <th scope="col">Updated By</th>
+                    <th scope="col">Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr th:each="post : ${posts}">
+                    <th scope="row" th:text="${post.getId()}"></th>
+                    <td th:text="${post.getTitle()}"></td>
+                    <td>
+                        <ul>
+                            <li th:each="category : ${post.getCategories()}" th:text="${category.getTitle()}"></li>
+                        </ul>
+                    </td>
+                    <td th:text="${post.getUsers() != null} ? ${post.getUsers().getName()} : '---'"></td>
+                    <td th:text="${#temporals.format(post.getCreatedAt(),'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:text="${#temporals.format(post.getUpdatedAt(),'yyyy-MM-dd HH:mm')}"></td>
+                    <td>
+                        <a class="btn btn-success" th:href="@{/posts/edit/{id}(id = ${post.getId()})}" style="width: 80px">Edit</a>
+                        <a class="btn btn-danger" href="#" style="width: 80px" data-toggle="modal" th:data-target="'#delete' + ${post.getId()}">Delete</a>
+
+                        <!-- Modal -->
+                        <div class="modal fade" th:id="'delete' + ${post.getId()}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Delete Post</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <span th:text="'Are You Sure to Delete '"></span>
+                                        <strong th:text="${post.getTitle()}"></strong>
+                                        <span th:text="' ?'"></span>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No, Close</button>
+                                        <a class="btn btn-danger" th:href="@{/posts/delete/{id}(id = ${post.getId()})}">Yes, Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+
+</body>
+</html>

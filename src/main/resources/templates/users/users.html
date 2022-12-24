@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!-- saved from url=(0044)file:///D:/Project/bootstrap/blog/users.html -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+        <meta content="width=device-width, initial-scale=1" name="viewport">
+        <title>Users</title>
+    <div th:replace="fragment/layout::head"></div>
+</head>
+<body class="">
+
+    <div th:replace="fragment/layout::header"></div>
+
+    <div class="container-fluid m-0 p-4">
+
+        <a class="mb-2 btn btn-primary" style="width: 100px" th:href="@{/users/register}">
+            NEW
+        </a>
+
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr th:each="user : ${users}">
+                    <th scope="row" th:text="${user.getId()}"></th>
+                    <td th:text="${user.getEmail()}"></td>
+                    <td th:text="${user.getName()}"></td>
+                    <td>
+                        <a class="btn btn-success" th:href="@{/users/edit/{id}(id = ${user.getId()})}" style="width: 80px">Edit</a>
+                        <a class="btn btn-danger" href="#" style="width: 80px" data-toggle="modal" th:data-target="'#delete' + ${user.getId()}">Delete</a>
+
+                        <!-- Modal -->
+                        <div class="modal fade" th:id="'delete' + ${user.getId()}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Delete User</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <span th:text="'Are You Sure to Delete '"></span>
+                                        <strong th:text="${user.getName()}"></strong>
+                                        <span th:text="' ?'"></span>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No, Close</button>
+                                        <a class="btn btn-danger" th:href="@{/users/delete/{id}(id = ${user.getId()})}">Yes, Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+
+</body>
+</html>
