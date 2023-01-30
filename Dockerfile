@@ -1,6 +1,6 @@
 FROM openjdk:16-jdk-slim
 
-MAINTAINER mehdi "mehdizebhi@gmail.com"
+MAINTAINER mehdi "mehdizebhi@yahoo.com"
 
 ENV port=8080
 ENV jdbcurl=jdbc:mysql://localhost:3307/blog
